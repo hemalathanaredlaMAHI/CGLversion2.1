@@ -17,7 +17,7 @@ public class TestJunit {
 		  Assertions.assertSame(false,b.createboard(-5,null));
 	}  
 	 @Test 
-	  public void testCGLThree() {
+	  public void testCGLThree() { 
 		  NextGeneration n=new NextGeneration ();
 	      boolean [][]b={{false,false,false,false,false},{false,true,false,false,false},{false,false,true,false,false},{false,false,false,true,false},{false,false,false,false,true}};
 	      boolean [][]s=n.nextgen(b);

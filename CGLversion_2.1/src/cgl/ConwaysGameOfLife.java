@@ -18,7 +18,7 @@ public class ConwaysGameOfLife { // The game starts from hear.
           
         // Reading Live cells 
         for (int i = 0; i < m; i++) {
-            l[i][0] = sc.nextInt(); 
+            l[i][0] = sc.nextInt();  
             l[i][1] = sc.nextInt();
         }
       

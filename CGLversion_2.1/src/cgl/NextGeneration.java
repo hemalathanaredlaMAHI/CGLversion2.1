@@ -36,7 +36,7 @@ public class NextGeneration {
                      if(z==3){
                          ng[i][j] = true;
                      }
-                 }
+                 } 
                  else{
                      if(z<2){ 
                          ng[i][j]=false;

@@ -56,7 +56,7 @@ public class Board {
         		for(int j=0;j<size;j++)
         			if(s[k][j]==true)
         				count=1;
-        		}
+        		} 
         	if(count==0)
         		break;
         System.out.println("NextGenration");
