@@ -1,7 +1,9 @@
-package conwayJavaFX;
 
+package cgl;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Scanner;
 
 import javafx.animation.Animation;
@@ -78,9 +80,11 @@ public class UserInterface {
 	// There are two Boards. The previous Board and the new Board.  Once the new Board has been
 	// displayed, it becomes the previous Board for the generation of the next new Board.
 	//private Board oddGameBoard = new Board();		// The Board for odd frames of the animation
+	private Board oddGameBoard = new Board(boardSizeWidth, boardSizeHeight);
 	private Pane oddCanvas = new Pane();			// Pane that holds its graphical representation
 	
 	//private Board evenGameBoard =  new Board();	// The Board for even frames of the animation
+	private Board evenGameBoard =  new Board(boardSizeWidth, boardSizeHeight);
 	private Pane evenCanvas = new Pane();			// Pane that holds its graphical representation
 
 	private boolean toggle = true;					// A two-state attribute that specifies which
@@ -267,6 +271,23 @@ public class UserInterface {
 	private void loadImageData() {
 		try {
 			// Your code goes here......
+			Scanner scan= new Scanner(new File(str_FileName));
+			ArrayList<Integer> list1= new ArrayList<Integer>();
+			while(scan.hasNext()) {
+				list1.add(scan.nextInt());
+				
+			}
+			int[][] livecells=new int[list1.size()/2][2];
+			int k=0;
+			for(int i=0;i<list1.size()/2;i++)
+			{
+				livecells[i][0]=list1.get(k++);
+				livecells[i][1]=list1.get(k++);
+				
+			}
+			System.out.println(Arrays.deepToString(livecells));
+			oddGameBoard.createBoard(livecells);
+			populateCanvas();
 			
 		}
 		catch (Exception e)  {
@@ -276,6 +297,8 @@ public class UserInterface {
 		button_Load.setDisable(true);				// Disable the Load button, since it is done
 		button_Start.setDisable(false);				// Enable the Start button
 	};												// and wait for the User to press it.
+
+	
 
 	/**********
 	 * This method removes the start button, sets up the stop button, and starts the simulation
@@ -305,9 +328,40 @@ public class UserInterface {
 	 */
 	public void runSimulation(){
 		// Use the toggle to flip back and forth between the current generation and next generation boards.
-		
+		if(toggle) {
+			oddGameBoard.nextGeneration(evenGameBoard);
+			toggle = false;
+			//System.out.println(oddGameBoard);
+		}
+		else {
+			evenGameBoard.nextGeneration(oddGameBoard);
+			toggle = true;
+			//System.out.println(evenGameBoard);
+			
+		}
+		populateCanvas();
 		// Your code goes here...
 	}
+	public void populateCanvas() {
+		Board board;
+		if(toggle) {
+			board = oddGameBoard;
+			
+		}
+		else {
+			board = evenGameBoard;
+		}
+		for(int i = 0; i<board.rows; i++) {
+			for(int j= 0; j<board.columns; j++) {
+				if(board.grid[i][j].isAlive) {
+					Rectangle rect = new Rectangle(5,5,Color.BLUE);
+					rect.relocate(6*i, 6*j);
+					window.getChildren().add(rect);
+				}
+			}
+				
+			}
+		}
 
 	/**********
 	 * This method reads in the contents of the data file and discards it as quickly as it reads it
@@ -385,4 +439,5 @@ public class UserInterface {
 		errorMessage_FileContents = "";
 		return true;							// End of file found 
 	}
+	
 }
