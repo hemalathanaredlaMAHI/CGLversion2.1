@@ -37,6 +37,22 @@ public class UserInterface {
 	Class Attributes
 	
 	**********************************************************************************************/
+	private boolean[][] s;
+	private int[][] l;
+	public void setboard(boolean [][] s)
+	{
+		this.s=s;
+	}
+	public boolean [][] getboard()
+	{
+		return s;
+	}
+	public void setlivecells(int[][] l) {
+		this.l=l;
+	}
+	public int[][] getlivecells(){
+		return l;
+	}
 
 	// Attributes used to establish the board and control panel within the window provided to us
 	private double controlPanelHeight = ConwayMain.WINDOW_HEIGHT - 110;
@@ -80,11 +96,11 @@ public class UserInterface {
 	// There are two Boards. The previous Board and the new Board.  Once the new Board has been
 	// displayed, it becomes the previous Board for the generation of the next new Board.
 	//private Board oddGameBoard = new Board();		// The Board for odd frames of the animation
-	private Board oddGameBoard = new Board(boardSizeWidth, boardSizeHeight);
+	private Board oddGameBoard = new Board();
 	private Pane oddCanvas = new Pane();			// Pane that holds its graphical representation
 	
 	//private Board evenGameBoard =  new Board();	// The Board for even frames of the animation
-	private Board evenGameBoard =  new Board(boardSizeWidth, boardSizeHeight);
+	private Board evenGameBoard =  new Board();
 	private Pane evenCanvas = new Pane();			// Pane that holds its graphical representation
 
 	private boolean toggle = true;					// A two-state attribute that specifies which
@@ -268,7 +284,9 @@ public class UserInterface {
 	 * This method is called when the Load button is pressed. It tries to load the data onto the
 	 * board for the simulation.
 	 */
+	
 	private void loadImageData() {
+		
 		try {
 			// Your code goes here......
 			Scanner scan= new Scanner(new File(str_FileName));
@@ -277,17 +295,18 @@ public class UserInterface {
 				list1.add(scan.nextInt());
 				
 			}
-			int[][] livecells=new int[list1.size()/2][2];
+			this.l=new int[list1.size()/2][2];
 			int k=0;
 			for(int i=0;i<list1.size()/2;i++)
 			{
-				livecells[i][0]=list1.get(k++);
-				livecells[i][1]=list1.get(k++);
+				this.l[i][0]=list1.get(k++);
+				this.l[i][1]=list1.get(k++);
 				
 			}
-			System.out.println(Arrays.deepToString(livecells));
-			oddGameBoard.createBoard(livecells);
-			populateCanvas();
+			
+			s=oddGameBoard.createboard(100,this.l);
+		
+			populateCanvas(oddCanvas);
 			
 		}
 		catch (Exception e)  {
@@ -328,39 +347,27 @@ public class UserInterface {
 	 */
 	public void runSimulation(){
 		// Use the toggle to flip back and forth between the current generation and next generation boards.
-		if(toggle) {
-			oddGameBoard.nextGeneration(evenGameBoard);
-			toggle = false;
-			//System.out.println(oddGameBoard);
-		}
-		else {
-			evenGameBoard.nextGeneration(oddGameBoard);
-			toggle = true;
-			//System.out.println(evenGameBoard);
-			
-		}
-		populateCanvas();
+		window.getChildren().remove(oddCanvas);
+		this.s=oddGameBoard.nextgen(this.s);
+		oddCanvas=new Pane();
+		populateCanvas(oddCanvas);
 		// Your code goes here...
 	}
-	public void populateCanvas() {
-		Board board;
-		if(toggle) {
-			board = oddGameBoard;
-			
-		}
-		else {
-			board = evenGameBoard;
-		}
-		for(int i = 0; i<board.rows; i++) {
-			for(int j= 0; j<board.columns; j++) {
-				if(board.grid[i][j].isAlive) {
+	public void populateCanvas(Pane a) {
+		
+		
+		for(int i = 0; i<this.s.length; i++) {
+			for(int j= 0; j<this.s.length; j++) {
+				if(this.s[i][j]) {
 					Rectangle rect = new Rectangle(5,5,Color.BLUE);
-					rect.relocate(6*i, 6*j);
-					window.getChildren().add(rect);
+					rect.relocate(4*i, 4*j);
+					a.getChildren().add(rect);
 				}
 			}
 				
 			}
+		window.getChildren().add(a);
+		
 		}
 
 	/**********

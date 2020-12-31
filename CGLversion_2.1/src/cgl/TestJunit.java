@@ -31,11 +31,6 @@ public class TestJunit {
 		  int [][] l={{1,1},{2,2},{3,3},{4,4}};
 		  Assertions.assertSame(true,b.createboard(5,l));
 	 }  
-	 @Test 
-	  public void testCGLFive() {
-		  System.out.println("======TEST FIVE EXECUTED=======");
-		  ConwaysGameOfLife c=new ConwaysGameOfLife();
-		  Assertions.assertEquals("Board and next generation is created",c.sample()); 
-	}   
+	 
 }
  
